@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños! - Undertale Style</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ut-white: #ffffff;
+            --ut-black: #000000;
+            --ut-red: #ff0000;
+            --ut-orange: #ffa500;
+        }
+
+        body {
+            background-color: var(--ut-black);
+            color: var(--ut-white);
+            font-family: 'Press Start 2P', cursive;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            image-rendering: pixelated;
+        }
+
+        /* Contenedor del personaje */
+        #sprite-container {
+            margin-bottom: 20px;
+            height: 150px;
+        }
+
+        .heart {
+            width: 30px;
+            fill: var(--ut-red);
+            animation: pulse 0.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Cuadro de Diálogo */
+        .dialog-box {
+            width: 80%;
+            max-width: 700px;
+            border: 6px solid var(--ut-white);
+            padding: 25px;
+            min-height: 120px;
+            position: relative;
+            background: var(--ut-black);
+        }
+
+        .text-content {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-left: 10px;
+        }
+
+        .asterisk {
+            margin-right: 15px;
+            vertical-align: top;
+        }
+
+        /* Botones de acción clásicos */
+        .menu-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            max-width: 700px;
+            margin-top: 40px;
+        }
+
+        .ut-button {
+            border: 3px solid var(--ut-orange);
+            color: var(--ut-orange);
+            padding: 10px 20px;
+            font-size: 16px;
+            background: transparent;
+            cursor: pointer;
+            transition: 0.2s;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ut-button:hover {
+            background-color: rgba(255, 165, 0, 0.2);
+            color: var(--ut-white);
+            border-color: var(--ut-white);
+        }
+
+        .ut-button:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sprite-container">
+        <svg class="heart" viewBox="0 0 32 32">
+            <path d="M16,28.261l-10.74-10.74C2.502,14.764,2,13.158,2,11.356c0-4.059,3.3-7.359,7.359-7.359 c2.254,0,4.28,1.021,5.641,2.628C16.359,5.018,18.385,4,20.641,4c4.059,0,7.359,3.3,7.359,7.359c0,1.802-0.502,3.408-3.259,6.165 L16,28.261z"/>
+        </svg>
+    </div>
+
+    <div class="dialog-box">
+        <span class="text-content">
+            <span class="asterisk">*</span><span id="typewriter"></span>
+        </span>
+    </div>
+
+    <div class="menu-buttons">
+        <button class="ut-button" onclick="changeText('fight')">FIGHT</button>
+        <button class="ut-button" onclick="changeText('act')">ACT</button>
+        <button class="ut-button" onclick="changeText('item')">ITEM</button>
+        <button class="ut-button" onclick="changeText('mercy')">MERCY</button>
+    </div>
+
+    <script>
+        const texts = {
+            intro: "Parece que hoy es un día especial...",
+            fight: "No puedes pelear en tu cumpleaños. ¡Es contra las reglas!",
+            act: "Decides darle un fuerte abrazo al cumpleañero. Su determinación aumenta.",
+            item: "Has encontrado un [PEDAZO DE TARTA]. Recuperas HP al máximo.",
+            mercy: "¡Felicidades! Has decidido mostrar piedad y celebrar un año más."
+        };
+
+        let i = 0;
+        let speed = 50;
+        let currentString = texts.intro;
+        const target = document.getElementById("typewriter");
+
+        function typeWriter() {
+            if (i < currentString.length) {
+                target.innerHTML += currentString.charAt(i);
+                i++;
+                setTimeout(typeWriter, speed);
+            }
+        }
+
+        function changeText(key) {
+            // Reiniciar el efecto
+            target.innerHTML = "";
+            i = 0;
+            currentString = texts[key];
+            typeWriter();
+        }
+
+        // Iniciar al cargar
+        window.onload = typeWriter;
+    </script>
+</body>
+</html>
