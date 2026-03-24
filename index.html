@@ -3,157 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Feliz Cumpleaños! - Undertale Style</title>
+    <link rel="icon" type="image/x-icon" href="img/heart.png">
+    <title>Para Karlangas</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --ut-white: #ffffff;
-            --ut-black: #000000;
-            --ut-red: #ff0000;
-            --ut-orange: #ffa500;
+        body, html {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+            color: white;
         }
 
-        body {
-            background-color: var(--ut-black);
-            color: var(--ut-white);
-            font-family: 'Press Start 2P', cursive;
+        /* --- 1. FONDO DEL MENÚ (1280x960) --- */
+        body.main-menu-visible {
+            background-image: url('img/background.png');
+            background-size: contain; 
+            background-position: center;
+            background-repeat: no-repeat;
+            image-rendering: pixelated; /* Mantiene la nitidez del píxel */
+            transition: background-image 0.8s steps(4);
+        }
+
+        /* --- 2. PANTALLA DE INICIO --- */
+        #start-screen {
+            text-align: center;
+            cursor: pointer;
+            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            image-rendering: pixelated;
+            gap: 20px;
         }
 
-        /* Contenedor del personaje */
-        #sprite-container {
-            margin-bottom: 20px;
-            height: 150px;
-        }
-
-        .heart {
-            width: 30px;
-            fill: var(--ut-red);
-            animation: pulse 0.8s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* Cuadro de Diálogo */
-        .dialog-box {
-            width: 80%;
-            max-width: 700px;
-            border: 6px solid var(--ut-white);
-            padding: 25px;
-            min-height: 120px;
-            position: relative;
-            background: var(--ut-black);
-        }
-
-        .text-content {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-left: 10px;
-        }
-
-        .asterisk {
-            margin-right: 15px;
-            vertical-align: top;
-        }
-
-        /* Botones de acción clásicos */
-        .menu-buttons {
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
-            max-width: 700px;
-            margin-top: 40px;
-        }
-
-        .ut-button {
-            border: 3px solid var(--ut-orange);
-            color: var(--ut-orange);
-            padding: 10px 20px;
-            font-size: 16px;
-            background: transparent;
-            cursor: pointer;
-            transition: 0.2s;
-            text-transform: uppercase;
+        .start-option {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 20px;
         }
 
-        .ut-button:hover {
-            background-color: rgba(255, 165, 0, 0.2);
-            color: var(--ut-white);
-            border-color: var(--ut-white);
+        #start-screen p {
+            font-size: 18px;
+            margin: 0;
+            letter-spacing: 2px;
+            animation: blink 1.2s steps(2, start) infinite; /* Parpadeo retro */
         }
 
-        .ut-button:active {
-            transform: scale(0.95);
+        /* --- 3. CONTENEDOR DE LA INTRO (IMÁGENES) --- */
+        #intro-container {
+            display: none;
+            width: 90%;
+            max-width: 900px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #intro-image {
+            max-width: 100%;
+            height: auto;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            image-rendering: pixelated; 
+        }
+
+        /* --- 4. MENÚ PRINCIPAL (DISEÑO RPG) --- */
+        #main-menu-container {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .menu-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centra el bloque completo respecto a la pantalla */
+            gap: 60px; 
+            margin-top: -60px; /* Elevado para balancear con Flowey */
+        }
+
+        #main-logo {
+            width: 580px; 
+            max-width: 85vw;
+            height: auto;
+            image-rendering: pixelated;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3)); /* Resalte del logo */
+        }
+
+        /* Bloque de opciones alineado a la izquierda internamente */
+        .options-list {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start; /* Alinea los textos entre sí a la izquierda */
+            gap: 35px;
+            padding-bottom: 60px;
+            padding-left: 50px; /* Compensa visualmente el espacio del corazón */
+        }
+
+        .menu-option {
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding-right: 45px;
+            position: relative; /* Permite posicionar el corazón sin mover el texto */
+            transition: color 0.2s ease;
+            letter-spacing: 2px;
+        }
+
+        /* El Corazón (Soul) */
+        .menu-option .heart {
+            visibility: hidden; 
+            position: absolute;
+            left: -45px; /* Aparece a la izquierda sin desplazar el texto */
+            width: 24px;
+            height: 24px;
+            background-color: #ff0000;
+            clip-path: polygon(0% 20%, 20% 0%, 40% 0%, 50% 20%, 60% 0%, 80% 0%, 100% 20%, 100% 50%, 50% 100%, 0% 50%);
+            animation: pulse 0.6s infinite alternate;
+        }
+
+        .menu-option:hover {
+            color: #ffff00; /* Amarillo de selección */
+        }
+
+        .menu-option:hover .heart {
+            visibility: visible;
+        }
+
+        /* --- 5. ANIMACIONES --- */
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
+
+        @keyframes blink {
+            to { visibility: hidden; }
+        }
+
+        .visible {
+            opacity: 1 !important;
         }
     </style>
 </head>
 <body>
 
-    <div id="sprite-container">
-        <svg class="heart" viewBox="0 0 32 32">
-            <path d="M16,28.261l-10.74-10.74C2.502,14.764,2,13.158,2,11.356c0-4.059,3.3-7.359,7.359-7.359 c2.254,0,4.28,1.021,5.641,2.628C16.359,5.018,18.385,4,20.641,4c4.059,0,7.359,3.3,7.359,7.359c0,1.802-0.502,3.408-3.259,6.165 L16,28.261z"/>
-        </svg>
+    <div id="start-screen">
+        <div class="start-option">
+            <div class="heart"></div>
+            <p>[ CLICK PARA COMENZAR ]</p>
+            <div class="heart"></div>
+        </div>
     </div>
 
-    <div class="dialog-box">
-        <span class="text-content">
-            <span class="asterisk">*</span><span id="typewriter"></span>
-        </span>
+    <div id="intro-container">
+        <img id="intro-image" src="" alt="">
     </div>
 
-    <div class="menu-buttons">
-        <button class="ut-button" onclick="changeText('fight')">FIGHT</button>
-        <button class="ut-button" onclick="changeText('act')">ACT</button>
-        <button class="ut-button" onclick="changeText('item')">ITEM</button>
-        <button class="ut-button" onclick="changeText('mercy')">MERCY</button>
+    <div id="main-menu-container">
+        <div class="menu-content">
+        
+            
+            <div class="options-list">
+                <div class="menu-option">
+                    <div class="heart"></div>
+                    <span>COMENZAR</span>
+                </div>
+                <div class="menu-option">
+                    <div class="heart"></div>
+                    <span>CREDITOS</span>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <audio id="intro-sound" src="sounds/INTROSOUND.mp3"></audio>
+    <audio id="hover-sound" src="sounds/sound_menu.mp3"></audio>
+    <audio id="bg-music" src="sounds/mus_menu0.ogg" loop></audio>
 
     <script>
-        const texts = {
-            intro: "Parece que hoy es un día especial...",
-            fight: "No puedes pelear en tu cumpleaños. ¡Es contra las reglas!",
-            act: "Decides darle un fuerte abrazo al cumpleañero. Su determinación aumenta.",
-            item: "Has encontrado un [PEDAZO DE TARTA]. Recuperas HP al máximo.",
-            mercy: "¡Felicidades! Has decidido mostrar piedad y celebrar un año más."
-        };
+        const imagenes = ['img/1titulo.png', 'img/2titulo.png', 'img/3titulo.png'];
+        const tiempoVisible = 2500;
+        const tiempoFade = 1200;
 
-        let i = 0;
-        let speed = 50;
-        let currentString = texts.intro;
-        const target = document.getElementById("typewriter");
+        const introImage = document.getElementById('intro-image');
+        const introSound = document.getElementById('intro-sound');
+        const hoverSound = document.getElementById('hover-sound');
+        const bgMusic = document.getElementById('bg-music');
+        const startScreen = document.getElementById('start-screen');
+        const introContainer = document.getElementById('intro-container');
+        const mainMenuContainer = document.getElementById('main-menu-container');
+        const body = document.body;
+        
+        let index = 0;
 
-        function typeWriter() {
-            if (i < currentString.length) {
-                target.innerHTML += currentString.charAt(i);
-                i++;
-                setTimeout(typeWriter, speed);
+        // Iniciar secuencia tras el clic del usuario
+        startScreen.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            introContainer.style.display = 'flex';
+            mostrarSecuencia();
+        });
+
+        // Función para rotar las imágenes de la intro
+        function mostrarSecuencia() {
+            if (index < imagenes.length) {
+                introImage.src = imagenes[index];
+                introImage.onload = () => {
+                    introImage.classList.add('visible');
+                    introSound.currentTime = 0; 
+                    introSound.play().catch(e => console.log("Audio bloqueado:", e));
+                    
+                    setTimeout(() => {
+                        introImage.classList.remove('visible');
+                        setTimeout(() => {
+                            index++;
+                            mostrarSecuencia();
+                        }, tiempoFade);
+                    }, tiempoVisible);
+                };
+            } else {
+                showMainMenu();
             }
         }
 
-        function changeText(key) {
-            // Reiniciar el efecto
-            target.innerHTML = "";
-            i = 0;
-            currentString = texts[key];
-            typeWriter();
+        // Transición al menú principal y reproducción de música
+        function showMainMenu() {
+            introContainer.style.display = 'none';
+            body.classList.add('main-menu-visible');
+            mainMenuContainer.style.display = 'flex';
+            
+            bgMusic.play().catch(e => console.log("Música bloqueada por el navegador:", e));
+            initMenuInteractions(); // Cambiado para incluir clics
         }
 
-        // Iniciar al cargar
-        window.onload = typeWriter;
+        // Inicializar sonidos de hover y redirección de clic
+        function initMenuInteractions() {
+            const options = document.querySelectorAll('.menu-option');
+            options.forEach((option, i) => {
+                // Sonido al pasar el ratón
+                option.addEventListener('mouseenter', () => {
+                    hoverSound.currentTime = 0;
+                    hoverSound.play().catch(e => console.log("Error de audio:", e));
+                });
+
+                // Acción al hacer clic
+                option.addEventListener('click', () => {
+                    if (i === 0) { // Si es el primer botón (COMENZAR)
+                        window.location.href = 'game.html'; 
+                    } else if (i === 1) {
+                        alert("¡Próximamente!");
+                    }
+                });
+            });
+        }
     </script>
 </body>
 </html>
