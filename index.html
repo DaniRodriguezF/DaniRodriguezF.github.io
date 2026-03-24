@@ -29,7 +29,7 @@
             background-size: contain; 
             background-position: center;
             background-repeat: no-repeat;
-            image-rendering: pixelated; /* Mantiene la nitidez del píxel */
+            image-rendering: pixelated; 
             transition: background-image 0.8s steps(4);
         }
 
@@ -54,7 +54,7 @@
             font-size: 18px;
             margin: 0;
             letter-spacing: 2px;
-            animation: blink 1.2s steps(2, start) infinite; /* Parpadeo retro */
+            animation: blink 1.2s steps(2, start) infinite; 
         }
 
         /* --- 3. CONTENEDOR DE LA INTRO (IMÁGENES) --- */
@@ -90,27 +90,18 @@
         .menu-content {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Centra el bloque completo respecto a la pantalla */
+            align-items: center;
             gap: 60px; 
-            margin-top: -60px; /* Elevado para balancear con Flowey */
+            margin-top: -60px;
         }
 
-        #main-logo {
-            width: 580px; 
-            max-width: 85vw;
-            height: auto;
-            image-rendering: pixelated;
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3)); /* Resalte del logo */
-        }
-
-        /* Bloque de opciones alineado a la izquierda internamente */
         .options-list {
             display: inline-flex;
             flex-direction: column;
-            align-items: flex-start; /* Alinea los textos entre sí a la izquierda */
+            align-items: flex-start;
             gap: 35px;
             padding-bottom: 60px;
-            padding-left: 50px; /* Compensa visualmente el espacio del corazón */
+            padding-left: 50px;
         }
 
         .menu-option {
@@ -119,16 +110,15 @@
             display: flex;
             align-items: center;
             padding-right: 45px;
-            position: relative; /* Permite posicionar el corazón sin mover el texto */
+            position: relative;
             transition: color 0.2s ease;
             letter-spacing: 2px;
         }
 
-        /* El Corazón (Soul) */
         .menu-option .heart {
             visibility: hidden; 
             position: absolute;
-            left: -45px; /* Aparece a la izquierda sin desplazar el texto */
+            left: -45px;
             width: 24px;
             height: 24px;
             background-color: #ff0000;
@@ -136,30 +126,40 @@
             animation: pulse 0.6s infinite alternate;
         }
 
-        .menu-option:hover {
-            color: #ffff00; /* Amarillo de selección */
-        }
+        .menu-option:hover { color: #ffff00; }
+        .menu-option:hover .heart { visibility: visible; }
 
-        .menu-option:hover .heart {
-            visibility: visible;
-        }
-
-        /* --- 5. ANIMACIONES --- */
         @keyframes pulse {
             from { transform: scale(1); }
             to { transform: scale(1.15); }
         }
 
-        @keyframes blink {
-            to { visibility: hidden; }
+        @keyframes blink { to { visibility: hidden; } }
+
+        .visible { opacity: 1 !important; }
+
+        /* --- BOTÓN PANTALLA COMPLETA --- */
+        #fullscreen-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 24px;
+            opacity: 0.2;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            font-family: Arial, sans-serif;
         }
 
-        .visible {
-            opacity: 1 !important;
-        }
+        #fullscreen-btn:hover { opacity: 0.8; }
     </style>
 </head>
 <body>
+
+    <button id="fullscreen-btn" title="Pantalla Completa">⛶</button>
 
     <div id="start-screen">
         <div class="start-option">
@@ -175,8 +175,6 @@
 
     <div id="main-menu-container">
         <div class="menu-content">
-        
-            
             <div class="options-list">
                 <div class="menu-option">
                     <div class="heart"></div>
@@ -207,17 +205,29 @@
         const introContainer = document.getElementById('intro-container');
         const mainMenuContainer = document.getElementById('main-menu-container');
         const body = document.body;
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
         
         let index = 0;
 
-        // Iniciar secuencia tras el clic del usuario
+        // --- LÓGICA PANTALLA COMPLETA ---
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch((err) => {
+                    console.log(`Error: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
         startScreen.addEventListener('click', () => {
             startScreen.style.display = 'none';
             introContainer.style.display = 'flex';
             mostrarSecuencia();
         });
 
-        // Función para rotar las imágenes de la intro
         function mostrarSecuencia() {
             if (index < imagenes.length) {
                 introImage.src = imagenes[index];
@@ -239,29 +249,24 @@
             }
         }
 
-        // Transición al menú principal y reproducción de música
         function showMainMenu() {
             introContainer.style.display = 'none';
             body.classList.add('main-menu-visible');
             mainMenuContainer.style.display = 'flex';
-            
-            bgMusic.play().catch(e => console.log("Música bloqueada por el navegador:", e));
-            initMenuInteractions(); // Cambiado para incluir clics
+            bgMusic.play().catch(e => console.log("Música bloqueada:", e));
+            initMenuInteractions();
         }
 
-        // Inicializar sonidos de hover y redirección de clic
         function initMenuInteractions() {
             const options = document.querySelectorAll('.menu-option');
             options.forEach((option, i) => {
-                // Sonido al pasar el ratón
                 option.addEventListener('mouseenter', () => {
                     hoverSound.currentTime = 0;
                     hoverSound.play().catch(e => console.log("Error de audio:", e));
                 });
 
-                // Acción al hacer clic
                 option.addEventListener('click', () => {
-                    if (i === 0) { // Si es el primer botón (COMENZAR)
+                    if (i === 0) {
                         window.location.href = 'game.html'; 
                     } else if (i === 1) {
                         alert("¡Próximamente!");
