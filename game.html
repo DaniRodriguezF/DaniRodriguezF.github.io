@@ -286,10 +286,32 @@
             opacity: 1;
             transition: none; /* Aparece instantáneo, desaparece lento */
         }
+
+        /* --- BOTÓN PANTALLA COMPLETA --- */
+        #fullscreen-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000; /* Siempre por encima de todo */
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 24px;
+            opacity: 0.2; /* Casi invisible */
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            font-family: Arial, sans-serif; /* Usamos una fuente estándar para el ícono */
+        }
+
+        #fullscreen-btn:hover {
+            opacity: 0.8; /* Se hace visible al pasar el mouse */
+        }
         
     </style>
 </head>
 <body>
+
+    <button id="fullscreen-btn" title="Pantalla Completa">⛶</button>
 
     <div id="snow-overlay"></div>
     <div id="transition-overlay"></div>
@@ -2368,6 +2390,7 @@
         const gameOverHeart = document.getElementById('game-over-heart');
         const gameOverText = document.getElementById('game-over-text');
         const gameOverOptions = document.getElementById('game-over-options');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
 
         // ELEMENTOS TÉCNICOS NUEVOS
         const birthdayScreen = document.getElementById('birthday-screen');
@@ -2588,6 +2611,23 @@
                 }, 300);
             }, 1500); 
         }
+
+        // --- LÓGICA TÉCNICA: PANTALLA COMPLETA ---
+        
+        
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                // Si no está en pantalla completa, la activa
+                document.documentElement.requestFullscreen().catch((err) => {
+                    console.log(`Error al intentar iniciar pantalla completa: ${err.message}`);
+                });
+            } else {
+                // Si ya está en pantalla completa, la quita
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
 
         function startGameOverSequence() {
             clearTimeout(typingTimeout);
