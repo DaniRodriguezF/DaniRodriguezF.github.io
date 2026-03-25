@@ -227,7 +227,7 @@
             margin-bottom: 50px;
         }
 
-        #game-over-text { font-size: 40px; color: white; opacity: 0; margin-bottom: 50px; width: 100%; padding-left: 20px; }
+        #game-over-text { font-size: 40px; color: white; opacity: 0; margin-bottom: 50px; width: 100%; padding-left: 20px; text-align: center;}
 
         /* --- NUEVA PANTALLA DE CUMPLEAÑOS --- */
         #birthday-screen {
@@ -238,7 +238,7 @@
             align-items: center; text-align: center;
         }
 
-        #birthday-text { font-size: 40px; color: white; opacity: 0; margin-bottom: 50px; width: 100%; }
+        #birthday-text { font-size: 40px; color: white; opacity: 0; margin-bottom: 50px; width: 100%; padding-left: 20px; text-align: center;}
 
         .fade-in { animation: fadeInEffect 2s forwards; }
         @keyframes fadeInEffect { from { opacity: 0; } to { opacity: 1; } }
@@ -1707,6 +1707,7 @@
             // --- NUEVO NODO TÉCNICO ---
             trigger_birthday: {
                 music: "sounds/mus_memory.mp3",
+                next:"inicio",
                 onEnter: () => {
                     const left = document.getElementById('sprite-left');
                     const right = document.getElementById('sprite-right');
