@@ -27,7 +27,13 @@
 
         /* --- EFECTOS VISUALES --- */
         .shake { animation: shake-effect 0.2s ease-in-out infinite; }
+        
+        /* Corrección: Se agregó la animación flash que faltaba */
         .white-flash { animation: flash-anim 0.1s steps(2) infinite; }
+        @keyframes flash-anim {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(100); }
+        }
         
         .slide-out-left {
             animation: flowey-exit-left 2s ease-in forwards;
@@ -180,9 +186,12 @@
             display: none;
         }
 
+        /* --- CAJA DE DIÁLOGO ADAPTABLE --- */
         #dialogue-container {
             width: 80%; max-width: 800px;
-            height: 195px; border: 6px solid white;
+            min-height: 195px; /* Mantiene el tamaño clásico por defecto */
+            height: auto;      /* Permite que la caja crezca hacia abajo si es necesario */
+            border: 6px solid white;
             padding: 20px; margin-bottom: 40px;
             background: black; box-sizing: border-box;
             cursor: pointer; position: relative;
@@ -192,27 +201,38 @@
         #text-box { font-size: 18px; line-height: 1.5; margin: 0; pointer-events: none; }
 
         #options-container {
-            margin-top: 13px; display: flex;
+            margin-top: 6px; display: flex;
             flex-wrap: wrap; gap: 20px;
         }
 
+        /* --- ESTILOS DE LOS BOTONES DE OPCIÓN --- */
         .option-btn {
-            background: none; border: none;
-            color: white; font-family: 'Press Start 2P', cursive;
-            font-size: 16px; cursor: pointer;
-            display: flex; align-items: center; gap: 10px;
+            background: black; 
+            border: 2px solid white; /* Borde blanco estilo caja de menú */
+            padding: 10px 15px;      /* Espacio interno para darle cuerpo de botón */
+            color: white; 
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            transition: transform 0.1s ease, border-color 0.1s ease, color 0.1s ease;
         }
 
-        .option-btn:hover { color: #ffff00; }
-        .option-btn::before {
-            content: ''; width: 12px; height: 12px;
-            background-color: #ff0000;
-            clip-path: polygon(0% 20%, 20% 0%, 40% 0%, 50% 20%, 60% 0%, 80% 0%, 100% 20%, 100% 50%, 50% 100%, 0% 50%);
-            visibility: hidden;
+        .option-btn:hover { 
+            color: #ffff00; 
+            border-color: #ffff00;  /* El borde también se vuelve amarillo */
+            transform: scale(1.05); /* Pequeño salto visual hacia adelante */
         }
-        .option-btn:hover::before { visibility: visible; }
 
-        #game-over-screen {
+
+
+        /* =========================================================
+           CORRECCIÓN DE PANTALLAS COMPLETAS (GAME OVER Y CUMPLEAÑOS)
+           ========================================================= */
+
+        #game-over-screen, #birthday-screen {
             display: none; position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: black; z-index: 200;
@@ -227,18 +247,36 @@
             margin-bottom: 50px;
         }
 
-        #game-over-text { font-size: 40px; color: white; opacity: 0; margin-bottom: 50px; width: 100%; padding-left: 20px; text-align: center;}
-
-        /* --- NUEVA PANTALLA DE CUMPLEAÑOS --- */
-        #birthday-screen {
-            display: none; position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: black; z-index: 200;
-            flex-direction: column; justify-content: center;
-            align-items: center; text-align: center;
+        /* Textos grandes centrados sin desvíos */
+        #game-over-text, #birthday-text { 
+            font-size: 60px; 
+            color: white; 
+            opacity: 0; 
+            margin: 0 0 50px 0; 
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
         }
 
-        #birthday-text { font-size: 40px; color: white; opacity: 0; margin-bottom: 50px; width: 100%; padding-left: 20px; text-align: center;}
+        /* Contenedores de botones centrados */
+        #game-over-options, #birthday-options {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 20px;
+        }
+
+        /* Ajuste para que los botones de estas pantallas se vean más importantes */
+        #game-over-options .option-btn,
+        #birthday-options .option-btn {
+            font-size: 24px;
+            margin: 0;
+            min-width: 250px;
+            justify-content: center;
+        }
+
+        /* ========================================================= */
 
         .fade-in { animation: fadeInEffect 2s forwards; }
         @keyframes fadeInEffect { from { opacity: 0; } to { opacity: 1; } }
@@ -279,13 +317,12 @@
             z-index: 500;
             opacity: 0;
             pointer-events: none;
-            /* Controla la velocidad de desaparición aquí (2s) */
             transition: opacity 2s ease-in-out; 
         }
 
         #white-flash-overlay.active {
             opacity: 1;
-            transition: none; /* Aparece instantáneo, desaparece lento */
+            transition: none;
         }
 
         /* --- BOTÓN PANTALLA COMPLETA --- */
@@ -293,22 +330,22 @@
             position: fixed;
             top: 15px;
             left: 15px;
-            z-index: 1000; /* Siempre por encima de todo */
+            z-index: 1000;
             background: transparent;
             color: white;
             border: none;
             font-size: 24px;
-            opacity: 0.2; /* Casi invisible */
+            opacity: 0.2;
             cursor: pointer;
             transition: opacity 0.3s ease;
-            font-family: Arial, sans-serif; /* Usamos una fuente estándar para el ícono */
+            font-family: Arial, sans-serif;
         }
 
         #fullscreen-btn:hover {
-            opacity: 0.8; /* Se hace visible al pasar el mouse */
+            opacity: 0.8;
         }
         
-    </style>
+        </style>
 </head>
 <body>
 
@@ -561,21 +598,21 @@
                 text: "* humana.",
                 sprite: "img/characters/black.png",
                 music: "",
-                voice: "sounds/snd_sans.wav",
+                voice: "sounds/snd_txt.wav",
                 next: "inicio_snowdin4"
             },
             inicio_snowdin4: {
                 text: "* ¿puedes voltearte y saludarme?",
                 sprite: "img/characters/black.png",
                 music: "",
-                voice: "sounds/snd_sans.wav",
+                voice: "sounds/snd_txt.wav",
                 next: "inicio_snowdin5"
             },
             inicio_snowdin5: {
                 text: "* dame la mano.",
                 sprite: "img/characters/black.png",
                 music: "",
-                voice: "sounds/snd_sans.wav",
+                voice: "sounds/snd_txt.wav",
                 options: [ 
                     { label: "Dar la mano", next: "sans0" }, 
                     { label: "No dar la mano", next: "sans_captura_1" }]
@@ -1792,10 +1829,20 @@
                 moveDuration: "2.5s", // Suspenso lento
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
+                next: "mtt_q0"
+            },
+            mtt_q0: {
+                text: "* ¿CUÁL ES EL PREMIO POR RESPONDER CORRECTAMENTE?",
+                animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
+                animSpeedLeft: 400, 
+                moveClassLeft: "move-left-right",
+                moveDuration: "1.5s",
+                music: "sounds/mus_mettaton_quiz.mp3",
+                voice: "sounds/snd_mtt.wav",
                 next: "mtt_q1"
             },
             mtt_q1: {
-                text: "* ¿CUÁL ES EL PREMIO POR RESPONDER CORRECTAMENTE?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400, 
                 moveClassLeft: "move-left-right",
@@ -1844,10 +1891,20 @@
                 moveDuration: "2.5s", // Suspenso
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
+                next: "mtt_q2_pregunta1"
+            },
+            mtt_q2_pregunta1: {
+                text: "* ¿DE QUÉ ESTÁN HECHOS LOS ROBOTS?",
+                animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
+                animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "1.5s",
+                music: "sounds/mus_mettaton_quiz.mp3",
+                voice: "sounds/snd_mtt.wav",
                 next: "mtt_q2_pregunta"
             },
             mtt_q2_pregunta: {
-                text: "* ¿DE QUÉ ESTÁN HECHOS LOS ROBOTS?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400,
                 moveClassLeft: "move-left-right",
@@ -1963,7 +2020,7 @@
                 next: "mtt_broma_pregunta3"
             },
             mtt_broma_pregunta3: {
-                text: "* ¿CÓMO SIGUE VIVA ESA POBRE MÁQUINA?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
                 moveClassLeft: "move-left-right",
@@ -2222,10 +2279,20 @@
                 moveDuration: "2.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
+                next: "mtt_q4_pregunta1"
+            },
+            mtt_q4_pregunta1: {
+                text: "* ¿CÓMO SE LLAMA LA VERDADERA ESTRELLA DE ESTE DÍA?",
+                animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
+                animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "1.5s",
+                music: "sounds/mus_mettaton_quiz.mp3",
+                voice: "sounds/snd_mtt.wav",
                 next: "mtt_q4_pregunta"
             },
             mtt_q4_pregunta: {
-                text: "* ¿CÓMO SE LLAMA LA VERDADERA ESTRELLA DE ESTE DÍA?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400,
                 moveClassLeft: "move-left-right",
@@ -2274,10 +2341,20 @@
                 moveDuration: "3s", // Mega suspenso
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
+                next: "mtt_q5_pregunta1"
+            },
+            mtt_q5_pregunta1: {
+                text: "* ¿QUIÉN ES EL MONSTRUO MÁS ATRACTIVO DEL SUBSUELO?",
+                animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
+                animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "2s",
+                music: "sounds/mus_mettaton_quiz.mp3",
+                voice: "sounds/snd_mtt.wav",
                 next: "mtt_q5_pregunta"
             },
             mtt_q5_pregunta: {
-                text: "* ¿QUIÉN ES EL MONSTRUO MÁS ATRACTIVO DEL SUBSUELO?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400,
                 moveClassLeft: "move-left-right",
@@ -2310,7 +2387,7 @@
                 animSpeedLeft: 400,
                 moveClassLeft: "move-left-right",
                 moveDuration: "3s", // Confundido/lento
-                music: "sound/snd_no.wav", 
+                music: "sounds/snd_no.wav", 
                 voice: "sounds/snd_txt.wav",
                 soundEffect: "sounds/snd_phone.wav",
                 soundDelay: 100,
@@ -2487,7 +2564,7 @@
                 next: "alphys_pista"
             },
             alphys_pista: {
-                text: "* ¡C-corta el AZUL!",
+                text: "* ¡T-Tu puedes Karla!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400,
                 moveClassLeft: "move-left-right",
@@ -2506,7 +2583,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 50,
                 moveClassLeft: "move-left-right",
-                moveDuration: "0.2s", // Explosión
+                moveDuration: "0.2s", 
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_deathreport.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2522,7 +2599,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 500,
                 moveClassLeft: "move-up-down",
-                moveDuration: "4s", // Derrotado / Lento
+                moveDuration: "4s", 
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_deathreport.mp3",
                 voice: "sounds/snd_txt.wav",
@@ -2585,7 +2662,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 100,
                 moveClassLeft: "move-up-down",
-                moveDuration: "0.3s", // Extasis total
+                moveDuration: "0.3s",
                 spritePapyrus: "img/characters/alphys/alphys_happy.png",
                 music: "sounds/mus_deathglamour.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2598,7 +2675,7 @@
                 moveClassLeft: "move-up-down",
                 moveDuration: "0.5s",
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
-                mmusic: "sounds/mus_deathglamour.mp3",
+                music: "sounds/mus_deathglamour.mp3",
                 voice: "sounds/snd_alphys.wav",
                 next: "mtt_despedida_final"
             },

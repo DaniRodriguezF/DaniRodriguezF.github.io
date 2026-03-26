@@ -27,7 +27,13 @@
 
         /* --- EFECTOS VISUALES --- */
         .shake { animation: shake-effect 0.2s ease-in-out infinite; }
+        
+        /* Corrección: Se agregó la animación flash que faltaba */
         .white-flash { animation: flash-anim 0.1s steps(2) infinite; }
+        @keyframes flash-anim {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(100); }
+        }
         
         .slide-out-left {
             animation: flowey-exit-left 2s ease-in forwards;
@@ -180,9 +186,12 @@
             display: none;
         }
 
+        /* --- CAJA DE DIÁLOGO ADAPTABLE --- */
         #dialogue-container {
             width: 80%; max-width: 800px;
-            height: 195px; border: 6px solid white;
+            min-height: 195px; /* Mantiene el tamaño clásico por defecto */
+            height: auto;      /* Permite que la caja crezca hacia abajo si es necesario */
+            border: 6px solid white;
             padding: 20px; margin-bottom: 40px;
             background: black; box-sizing: border-box;
             cursor: pointer; position: relative;
@@ -192,27 +201,38 @@
         #text-box { font-size: 18px; line-height: 1.5; margin: 0; pointer-events: none; }
 
         #options-container {
-            margin-top: 13px; display: flex;
+            margin-top: 6px; display: flex;
             flex-wrap: wrap; gap: 20px;
         }
 
+        /* --- ESTILOS DE LOS BOTONES DE OPCIÓN --- */
         .option-btn {
-            background: none; border: none;
-            color: white; font-family: 'Press Start 2P', cursive;
-            font-size: 16px; cursor: pointer;
-            display: flex; align-items: center; gap: 10px;
+            background: black; 
+            border: 2px solid white; /* Borde blanco estilo caja de menú */
+            padding: 10px 15px;      /* Espacio interno para darle cuerpo de botón */
+            color: white; 
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+            transition: transform 0.1s ease, border-color 0.1s ease, color 0.1s ease;
         }
 
-        .option-btn:hover { color: #ffff00; }
-        .option-btn::before {
-            content: ''; width: 12px; height: 12px;
-            background-color: #ff0000;
-            clip-path: polygon(0% 20%, 20% 0%, 40% 0%, 50% 20%, 60% 0%, 80% 0%, 100% 20%, 100% 50%, 50% 100%, 0% 50%);
-            visibility: hidden;
+        .option-btn:hover { 
+            color: #ffff00; 
+            border-color: #ffff00;  /* El borde también se vuelve amarillo */
+            transform: scale(1.05); /* Pequeño salto visual hacia adelante */
         }
-        .option-btn:hover::before { visibility: visible; }
 
-        #game-over-screen {
+
+
+        /* =========================================================
+           CORRECCIÓN DE PANTALLAS COMPLETAS (GAME OVER Y CUMPLEAÑOS)
+           ========================================================= */
+
+        #game-over-screen, #birthday-screen {
             display: none; position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: black; z-index: 200;
@@ -227,18 +247,36 @@
             margin-bottom: 50px;
         }
 
-        #game-over-text { font-size: 40px; color: white; opacity: 0; margin-bottom: 50px; width: 100%; padding-left: 20px; }
-
-        /* --- NUEVA PANTALLA DE CUMPLEAÑOS --- */
-        #birthday-screen {
-            display: none; position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: black; z-index: 200;
-            flex-direction: column; justify-content: center;
-            align-items: center; text-align: center;
+        /* Textos grandes centrados sin desvíos */
+        #game-over-text, #birthday-text { 
+            font-size: 60px; 
+            color: white; 
+            opacity: 0; 
+            margin: 0 0 50px 0; 
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
         }
 
-        #birthday-text { font-size: 40px; color: white; opacity: 0; margin-bottom: 50px; width: 100%; }
+        /* Contenedores de botones centrados */
+        #game-over-options, #birthday-options {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 20px;
+        }
+
+        /* Ajuste para que los botones de estas pantallas se vean más importantes */
+        #game-over-options .option-btn,
+        #birthday-options .option-btn {
+            font-size: 24px;
+            margin: 0;
+            min-width: 250px;
+            justify-content: center;
+        }
+
+        /* ========================================================= */
 
         .fade-in { animation: fadeInEffect 2s forwards; }
         @keyframes fadeInEffect { from { opacity: 0; } to { opacity: 1; } }
@@ -265,8 +303,9 @@
 
         /* Clase para el tamaño de Mettaton */
         .mettaton-large {
-            transform: scale(1.4) translateY(-15px) !important; 
-            transition: transform 0.5s ease-out;
+            scale: 1.4 !important;
+            translate: 0 -15px !important;
+            transition: transform 0.5s ease-out, translate 0.5s ease-out;
         }
 
         /* Overlay para el flash blanco */
@@ -278,13 +317,12 @@
             z-index: 500;
             opacity: 0;
             pointer-events: none;
-            /* Controla la velocidad de desaparición aquí (2s) */
             transition: opacity 2s ease-in-out; 
         }
 
         #white-flash-overlay.active {
             opacity: 1;
-            transition: none; /* Aparece instantáneo, desaparece lento */
+            transition: none;
         }
 
         /* --- BOTÓN PANTALLA COMPLETA --- */
@@ -292,22 +330,22 @@
             position: fixed;
             top: 15px;
             left: 15px;
-            z-index: 1000; /* Siempre por encima de todo */
+            z-index: 1000;
             background: transparent;
             color: white;
             border: none;
             font-size: 24px;
-            opacity: 0.2; /* Casi invisible */
+            opacity: 0.2;
             cursor: pointer;
             transition: opacity 0.3s ease;
-            font-family: Arial, sans-serif; /* Usamos una fuente estándar para el ícono */
+            font-family: Arial, sans-serif;
         }
 
         #fullscreen-btn:hover {
-            opacity: 0.8; /* Se hace visible al pasar el mouse */
+            opacity: 0.8;
         }
         
-    </style>
+        </style>
 </head>
 <body>
 
@@ -560,21 +598,21 @@
                 text: "* humana.",
                 sprite: "img/characters/black.png",
                 music: "",
-                voice: "sounds/snd_sans.wav",
+                voice: "sounds/snd_txt.wav",
                 next: "inicio_snowdin4"
             },
             inicio_snowdin4: {
                 text: "* ¿puedes voltearte y saludarme?",
                 sprite: "img/characters/black.png",
                 music: "",
-                voice: "sounds/snd_sans.wav",
+                voice: "sounds/snd_txt.wav",
                 next: "inicio_snowdin5"
             },
             inicio_snowdin5: {
                 text: "* dame la mano.",
                 sprite: "img/characters/black.png",
                 music: "",
-                voice: "sounds/snd_sans.wav",
+                voice: "sounds/snd_txt.wav",
                 options: [ 
                     { label: "Dar la mano", next: "sans0" }, 
                     { label: "No dar la mano", next: "sans_captura_1" }]
@@ -1706,6 +1744,7 @@
             // --- NUEVO NODO TÉCNICO ---
             trigger_birthday: {
                 music: "sounds/mus_memory.mp3",
+                next:"inicio",
                 onEnter: () => {
                     const left = document.getElementById('sprite-left');
                     const right = document.getElementById('sprite-right');
@@ -1722,20 +1761,22 @@
                 sprite: "img/characters/black.png",
                 music: "",
                 voice: "sounds/snd_no.wav",
-                next: "mtt_intro_1"
+                next: "mtt_intro_1",
+                onEnter: () => {
+                    const left = document.getElementById('sprite-left');
+                    left.classList.add('slide-in-right');
+                },
             },
             mtt_intro_1: {
                 text: "* ¡OH YEEEES!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150, 
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.4s", // Entrada explosiva
                 music: "sounds/mus_mettaton.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/mus_mett_cheer.ogg",
                 soundDelay: 0,
-                onEnter: () => {
-                    const left = document.getElementById('sprite-left');
-                    left.classList.add('slide-in-right');
-                },
                 next: "mtt_intro_2"
             },
             mtt_intro_2: {
@@ -1743,6 +1784,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 250,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.8s", // Animado
                 music: "sounds/mus_mettaton.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_intro_3"
@@ -1752,6 +1794,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-left-right",
+                moveDuration: "1s",
                 music: "sounds/mus_mettaton.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_intro_4"
@@ -1761,6 +1804,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 300,
                 moveClassLeft: "move-left-right",
+                moveDuration: "1.2s",
                 music: "sounds/mus_mettaton.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_reglas"
@@ -1770,6 +1814,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 150, 
                 moveClassLeft: "move-up-down",
+                moveDuration: "1.5s", // Explicando con fluidez
                 music: "sounds/mus_mettaton.mp3",
                 voice: "sounds/snd_mtt.wav",
                 options: [ { label: "¡Comencemos el show!", next: "mtt_q0" } ]
@@ -1780,14 +1825,28 @@
                 text: "* PREGUNTA NÚMERO 1...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "2.5s", // Suspenso lento
+                music: "sounds/mus_mettaton_quiz.mp3",
+                voice: "sounds/snd_mtt.wav",
+                next: "mtt_q0"
+            },
+            mtt_q0: {
+                text: "* ¿CUÁL ES EL PREMIO POR RESPONDER CORRECTAMENTE?",
+                animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
+                animSpeedLeft: 400, 
+                moveClassLeft: "move-left-right",
+                moveDuration: "1.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_q1"
             },
             mtt_q1: {
-                text: "* ¿CUÁL ES EL PREMIO POR RESPONDER CORRECTAMENTE?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400, 
+                moveClassLeft: "move-left-right",
+                moveDuration: "1.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 options: [
@@ -1802,6 +1861,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 100, 
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.2s", // Frenético por la sacudida
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_shock.wav",
@@ -1816,6 +1876,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-up-down",
+                moveDuration: "0.6s", // Saltos alegres y rápidos
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_victory.wav",
@@ -1826,14 +1887,28 @@
                 text: "* PREGUNTA NÚMERO 2...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "2.5s", // Suspenso
+                music: "sounds/mus_mettaton_quiz.mp3",
+                voice: "sounds/snd_mtt.wav",
+                next: "mtt_q2_pregunta1"
+            },
+            mtt_q2_pregunta1: {
+                text: "* ¿DE QUÉ ESTÁN HECHOS LOS ROBOTS?",
+                animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
+                animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "1.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_q2_pregunta"
             },
             mtt_q2_pregunta: {
-                text: "* ¿DE QUÉ ESTÁN HECHOS LOS ROBOTS?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "1.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 options: [
@@ -1847,6 +1922,8 @@
                 text: "* ¡AY, CARIÑO, CASI!\n* PERO TÉCNICAMENTE SOMOS METAL Y MAGIA. ¡LO SIENTO!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 200,
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.3s", // Frenético/Castigo
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_shock.wav",
@@ -1861,6 +1938,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 250,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.6s", // Feliz
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_victory.wav",
@@ -1871,6 +1949,8 @@
                 text: "* PREGUNTA NÚMERO 3...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "2.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_q3_pregunta"
@@ -1879,6 +1959,8 @@
                 text: "* DOS TRENES SALEN DE SNOWDIN A 60 KM/H...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 500,
+                moveClassLeft: "move-up-down",
+                moveDuration: "3s", // Muy aburrido/lento
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_q3_b"
@@ -1888,6 +1970,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 100,
                 moveClassLeft: "move-up-down",
+                moveDuration: "0.4s", // Corta rápidamente
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_intro" 
@@ -1898,6 +1981,8 @@
                 text: "* AHORA, MIS FUENTES ME HAN DADO INFORMACIÓN MUY EXCLUSIVA SOBRE NUESTRA CONCURSANTE...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-left-right",
+                moveDuration: "2s", // Tono de chisme
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_pregunta"
@@ -1908,6 +1993,8 @@
                 text: "* MIS SENSORES ME INDICAN QUE TIENES EL MISMO COMPUTADOR DESDE EL AÑO 2016...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
+                moveClassLeft: "move-left-right",
+                moveDuration: "2s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_pregunta1"
@@ -1916,6 +2003,8 @@
                 text: "* ¡Y NUNCA LE HAS HECHO MANTENIMIENTO! ¡QUÉ HORROR!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
+                moveClassLeft: "move-up-down",
+                moveDuration: "0.5s", // Exagerando horror
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_pregunta2"
@@ -1924,14 +2013,18 @@
                 text: "* COMO EXPERTO EN TECNOLOGÍA, EXIJO SABER...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
+                moveClassLeft: "move-up-down",
+                moveDuration: "1s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_pregunta3"
             },
             mtt_broma_pregunta3: {
-                text: "* ¿CÓMO SIGUE VIVA ESA POBRE MÁQUINA?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
+                moveClassLeft: "move-left-right",
+                moveDuration: "2.5s", // Dramático
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_pc_opciones"
@@ -1940,6 +2033,8 @@
                 text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "2s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 options: [
@@ -1954,6 +2049,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 100,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.2s", // Asqueado y frenético
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_shock.wav",
@@ -1967,6 +2063,8 @@
                 text: "* ¡FASCINANTE! \n* AUNQUE TE RECOMIENDO DARLE UN POCO DE AMOR... Y UN FORMATEO.",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 200,
+                moveClassLeft: "move-up-down",
+                moveDuration: "0.7s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_victory.wav",
@@ -1979,6 +2077,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-up-down",
+                moveDuration: "2.5s", // Tono misterioso/chisme
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_furro2"
@@ -1987,7 +2086,8 @@
                 text: "* ¿QUÉ ES LO QUE REALMENTE DIBUJA KARLA CUANDO NADIE LA ESTÁ MIRANDO?",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 200,
-                moveClassLeft: "move-up-down",
+                moveClassLeft: "move-left-right",
+                moveDuration: "2.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_furro_q"
@@ -1996,6 +2096,8 @@
                 text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "2s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 options: [
@@ -2009,6 +2111,8 @@
                 text: "* ¡INCORRECTO!\n* ¡SABEMOS MUY BIEN CUÁL ES TU VERDADERA PASIÓN!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.2s", // Castigo
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_shock.wav",
@@ -2022,7 +2126,8 @@
                 text: "* ¡OH YEEEES!\n* ¡EL ARTE ES ARTE, CARIÑO! ¡NO TE ESCONDAS, DALE AL MUNDO TU GLAMOUR THERIAN!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 200,
-                moveClassLeft: "move-left-right",
+                moveClassLeft: "move-up-down",
+                moveDuration: "0.5s", // Extremadamente alegre
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_victory.wav",
@@ -2034,6 +2139,8 @@
                 text: "* Y PARA LA ÚLTIMA PREGUNTA DE ESTA SECCIÓN... \n* UNA DUDA QUE CARCOME A CIERTO ESPECTADOR MUY CERCANO A TI.",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 250,
+                moveClassLeft: "move-left-right",
+                moveDuration: "2s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_uni2"
@@ -2042,6 +2149,8 @@
                 text: "* CON LA UNIVERSIDAD CONSUMIENDO TODA TU VIDA... ¿CUÁNDO VOLVERÁS A JUGAR CON DANI?",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 250,
+                moveClassLeft: "move-up-down",
+                moveDuration: "2s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_broma_uni_q"
@@ -2050,6 +2159,8 @@
                 text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "2s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 options: [
@@ -2064,6 +2175,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 400,
                 moveClassLeft: "move-up-down",
+                moveDuration: "0.4s", // Drama veloz de TV
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_comercial_intro" 
@@ -2072,6 +2184,8 @@
                 text: "* ¡SÍ! ¡ESO ES LO QUE QUERÍAMOS ESCUCHAR!\n* ¡UNA VERDADERA ESTRELLA SIEMPRE TIENE TIEMPO PARA SUS FANS!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 200,
+                moveClassLeft: "move-up-down",
+                moveDuration: "0.6s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_victory.wav",
@@ -2084,6 +2198,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.8s", // Estilo presentador de comerciales
                 music: "sounds/snd_no.wav",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_comercial_texto"
@@ -2092,6 +2207,8 @@
                 text: "* ¿TU PC DEL 2016 SUENA COMO UN AVIÓN A PUNTO DE DESPEGAR CUANDO ABRES WORD?",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "1.2s",
                 music: "sounds/mus_dating.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_comercial_texto2"
@@ -2101,6 +2218,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.6s", // Venta agresiva y rápida
                 music: "sounds/mus_dating.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_llamada_intro"
@@ -2111,6 +2229,8 @@
                 text: "* ¡OH! ¡PARECE QUE TENEMOS UNA LLAMADA EN VIVO DE UN FAN MUY ENTUSIASTA!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
+                moveClassLeft: "move-up-down",
+                moveDuration: "0.7s",
                 music: "sounds/snd_no.wav", 
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_phone.wav",
@@ -2121,6 +2241,8 @@
                 text: "* ¡HOLA, TELEVISIÓN! ¡SOY YO, EL GRAN PAPYRUS!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"], 
                 animSpeedLeft: 400, 
+                moveClassLeft: "move-up-down",
+                moveDuration: "3s", // Mettaton espera mientras el otro habla
                 music: "sounds/mus_papyrus.mp3",
                 voice: "sounds/snd_papyrus.wav",
                 next: "mtt_llamada_papy2"
@@ -2129,6 +2251,8 @@
                 text: "* ¡SOLO LLAMABA PARA DESEARLE UN FELIZ CUMPLEAÑOS A KARLA Y OFRECERLE MIS MÍTICOS ESPAGUETIS!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"], 
                 animSpeedLeft: 400, 
+                moveClassLeft: "move-up-down",
+                moveDuration: "3s",
                 music: "sounds/mus_papyrus.mp3",
                 voice: "sounds/snd_papyrus.wav",
                 next: "mtt_llamada_corte"
@@ -2137,6 +2261,8 @@
                 text: "* ¡GRACIAS, FAN ANÓNIMO! ¡PERO EL TIEMPO EN TELEVISIÓN ES ORO!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.4s", // Cortando la llamada irritado
                 music: "sounds/snd_no.wav", 
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_block2.wav",
@@ -2149,14 +2275,28 @@
                 text: "* AHORA SÍ, PREGUNTA NÚMERO 4...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "2.5s",
+                music: "sounds/mus_mettaton_quiz.mp3",
+                voice: "sounds/snd_mtt.wav",
+                next: "mtt_q4_pregunta1"
+            },
+            mtt_q4_pregunta1: {
+                text: "* ¿CÓMO SE LLAMA LA VERDADERA ESTRELLA DE ESTE DÍA?",
+                animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
+                animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "1.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_q4_pregunta"
             },
             mtt_q4_pregunta: {
-                text: "* ¿CÓMO SE LLAMA LA VERDADERA ESTRELLA DE ESTE DÍA?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "1.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 options: [
@@ -2171,6 +2311,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.2s", // Castigo
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_shock.wav",
@@ -2185,6 +2326,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-up-down",
+                moveDuration: "0.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_victory.wav",
@@ -2195,14 +2337,28 @@
                 text: "* PREGUNTA FINAL:",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "3s", // Mega suspenso
+                music: "sounds/mus_mettaton_quiz.mp3",
+                voice: "sounds/snd_mtt.wav",
+                next: "mtt_q5_pregunta1"
+            },
+            mtt_q5_pregunta1: {
+                text: "* ¿QUIÉN ES EL MONSTRUO MÁS ATRACTIVO DEL SUBSUELO?",
+                animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
+                animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "2s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 next: "mtt_q5_pregunta"
             },
             mtt_q5_pregunta: {
-                text: "* ¿QUIÉN ES EL MONSTRUO MÁS ATRACTIVO DEL SUBSUELO?",
+                text: " ",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "2s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 options: [
@@ -2217,6 +2373,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.5s",
                 music: "sounds/mus_mettaton_quiz.mp3",
                 voice: "sounds/snd_mtt.wav",
                 soundEffect: "sounds/snd_victory.wav",
@@ -2228,7 +2385,9 @@
                 text: "* ...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 400,
-                music: "sound/snd_no.wav", 
+                moveClassLeft: "move-left-right",
+                moveDuration: "3s", // Confundido/lento
+                music: "sounds/snd_no.wav", 
                 voice: "sounds/snd_txt.wav",
                 soundEffect: "sounds/snd_phone.wav",
                 soundDelay: 100,
@@ -2238,6 +2397,8 @@
                 text: "* ¡E-espera, Mettaton! ¡N-no puedes terminar el programa todavía!",
                 spriteSans: "img/characters/mettaton/mettaton_mic1.png",
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
+                moveClassLeft: "move-up-down",
+                moveDuration: "3s",
                 music: "sounds/mus_alphys.mp3",
                 voice: "sounds/snd_alphys.wav",
                 onEnter: () => {
@@ -2251,6 +2412,8 @@
                 text: "* ¿ALPHYS, QUERIDA? ¿INTERRUMPIENDO MI CLÍMAX TELEVISIVO?",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "1s",
                 spritePapyrus: "img/characters/alphys/alphys_normal.png",
                 music: "sounds/mus_alphys.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2260,6 +2423,8 @@
                 text: "* ¡E-es el cumpleaños de Karla! ¡T-tenemos que darle la sorpresa e-especial que planeamos!",
                 spriteSans: "img/characters/mettaton/mettaton_mic1.png",
                 spritePapyrus: "img/characters/alphys/alphys_happy.png",
+                moveClassLeft: "move-up-down",
+                moveDuration: "3s",
                 music: "sounds/mus_alphys.mp3",
                 voice: "sounds/snd_alphys.wav",
                 next: "mtt_acepta_regalo"
@@ -2269,6 +2434,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.6s", // Animado a regalar
                 spritePapyrus: "img/characters/alphys/alphys_normal.png",
                 music: "sounds/snd_no.wav",
                 voice: "sounds/snd_mtt.wav",
@@ -2281,6 +2447,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.8s", // Presentador malvado
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_strongermonsters.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2291,6 +2458,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-left-right",
+                moveDuration: "2s", // Suspenso
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_strongermonsters.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2300,6 +2468,8 @@
                 text: "* ¿CUÁL ELIGES, CUMPLEAÑERA?",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 300,
+                moveClassLeft: "move-up-down",
+                moveDuration: "1.5s",
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_strongermonsters.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2313,6 +2483,8 @@
                 text: "* ¡OH NO! ¡ESTABA LLENA DE ABEJAS ROBÓTICAS ASESINAS!\n* ¡QUÉ CLÁSICO DE LA TELEVISIÓN!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 100,
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.2s", // Frenético/Castigo
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_strongermonsters.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2328,6 +2500,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 200,
                 moveClassLeft: "move-up-down",
+                moveDuration: "0.6s",
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_strongermonsters.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2339,6 +2512,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 300,
                 moveClassLeft: "move-left-right",
+                moveDuration: "1s", // Irritado
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_strongermonsters.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2347,6 +2521,8 @@
             mtt_ruleta_alphys: {
                 text: "* ¡M-Mettaton! ¡D-deja de asustarla! E-el verdadero juego e-es este...",
                 spriteSans: "img/characters/mettaton/mettaton_mic1.png",
+                moveClassLeft: "move-up-down",
+                moveDuration: "3s", // Esperando
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_strongermonsters.mp3",
                 voice: "sounds/snd_alphys.wav",
@@ -2359,6 +2535,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
                 moveClassLeft: "move-up-down",
+                moveDuration: "0.7s",
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/snd_no.wav",
                 voice: "sounds/snd_mtt.wav",
@@ -2368,6 +2545,8 @@
                 text: "* ¡TIENES 10 SEGUNDOS! ¿QUÉ CABLE CORTAS PARA SALVAR LA FIESTA?",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 100,
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.4s", // Pánico
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_deathreport.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2377,15 +2556,19 @@
                 text: "* ¡K-Karla! L-los manuales dicen que el rojo es una trampa...",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.4s",
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_deathreport.mp3",
                 voice: "sounds/snd_alphys.wav",
                 next: "alphys_pista"
             },
             alphys_pista: {
-                text: "* ¡C-corta el AZUL!",
+                text: "* ¡T-Tu puedes Karla!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.4s",
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_deathreport.mp3",
                 voice: "sounds/snd_alphys.wav",
@@ -2399,6 +2582,8 @@
                 text: "* ¡OH NO, CARIÑO! ¡BOMBA DETONADA!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 50,
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.2s", 
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_deathreport.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2413,6 +2598,8 @@
                 text: "* (Estás cubierta de confeti negro con olor a quemado... pero estás viva).",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 500,
+                moveClassLeft: "move-up-down",
+                moveDuration: "4s", 
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
                 music: "sounds/mus_deathreport.mp3",
                 voice: "sounds/snd_txt.wav",
@@ -2422,6 +2609,8 @@
                 text: "* ¡CORRECTO! ¡EL CONFETI CAE CON UN ESTILO ESPECTACULAR!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 200,
+                moveClassLeft: "move-up-down",
+                moveDuration: "0.5s",
                 spritePapyrus: "img/characters/alphys/alphys_happy.png",
                 music: "sounds/mus_deathreport.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2435,6 +2624,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 150,
                 moveClassLeft: "move-left-right",
+                moveDuration: "0.8s",
                 spritePapyrus: "img/characters/alphys/alphys_normal.png",
                 music: "sounds/mus_deathglamour.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2444,6 +2634,8 @@
                 text: "* ¡T-tú puedes, Karla! ¡D-dales tu mejor pose, como en los a-animes que vemos!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "0.8s",
                 spritePapyrus: "img/characters/alphys/alphys_happy.png",
                 music: "sounds/mus_deathglamour.mp3",
                 voice: "sounds/snd_alphys.wav",
@@ -2453,6 +2645,8 @@
                 text: "* LA CÁMARA ESTÁ RODANDO... ¿QUÉ VAS A HACER, BELLEZA?",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_question1.png", "img/characters/mettaton/mettaton_question2.png"],
                 animSpeedLeft: 100,
+                moveClassLeft: "move-up-down",
+                moveDuration: "1.2s", // Expectante
                 spritePapyrus: "img/characters/alphys/alphys_happy.png",
                 music: "sounds/mus_deathglamour.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2468,6 +2662,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 100,
                 moveClassLeft: "move-up-down",
+                moveDuration: "0.3s",
                 spritePapyrus: "img/characters/alphys/alphys_happy.png",
                 music: "sounds/mus_deathglamour.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2477,8 +2672,10 @@
                 text: "* ¡O-oh Dios mío, e-esa es la pose de Mew Mew Kissy Cutie! ¡KARLA ERES LA MEJOR!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 200,
+                moveClassLeft: "move-up-down",
+                moveDuration: "0.5s",
                 spritePapyrus: "img/characters/alphys/alphys_worry.png",
-                mmusic: "sounds/mus_deathglamour.mp3",
+                music: "sounds/mus_deathglamour.mp3",
                 voice: "sounds/snd_alphys.wav",
                 next: "mtt_despedida_final"
             },
@@ -2487,6 +2684,7 @@
                 animSpritesLeft: ["img/characters/mettaton/mettaton_correct1.png", "img/characters/mettaton/mettaton_correct2.png"],
                 animSpeedLeft: 100,
                 moveClassLeft: "move-up-down",
+                moveDuration: "0.5s",
                 spritePapyrus: "img/characters/alphys/alphys_happy.png",
                 music: "sounds/mus_deathglamour.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2498,6 +2696,8 @@
                 text: "* ¡HA SIDO UN EPISODIO PERFECTO!\n* ¡GRACIAS ALPHYS, Y GRACIAS KARLA POR PARTICIPAR!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 200,
+                moveClassLeft: "move-left-right",
+                moveDuration: "1s", // Final majestuoso
                 spritePapyrus: "img/characters/alphys/alphys_happy.png",
                 music: "sounds/mus_mettaton.mp3",
                 voice: "sounds/snd_mtt.wav",
@@ -2507,6 +2707,8 @@
                 text: "* ¡F-feliz cumpleaños, Karla! ¡E-espero que te haya gustado n-nuestro regalo!",
                 animSpritesLeft: ["img/characters/mettaton/mettaton_mic1.png", "img/characters/mettaton/mettaton_mic2.png"],
                 animSpeedLeft: 400,
+                moveClassLeft: "move-left-right",
+                moveDuration: "2s", // Pausa lenta final
                 spritePapyrus: "img/characters/alphys/alphys_happy.png",
                 music: "sounds/mus_mettaton.mp3",
                 voice: "sounds/snd_alphys.wav",
@@ -2517,14 +2719,6 @@
                     right.classList.add('slide-out-right-fast');
                 },
                 next: "trigger_birthday"
-            },
-            // --- ZONAS RESTANTES ---
-            inicio_picnic: {
-                text: "* Oh... hola...\n* No quería interrumpir tu fiesta...",
-                sprite: "img/characters/napstablook/blook_sad.png",
-                music: "sounds/mus_napstablook.mp3",
-                voice: "sounds/snd_blook.mp3",
-                options: [ { label: "Saludar", next: "seguir_ruinas" } ]
             },
             
         
@@ -2672,6 +2866,14 @@
             // 3. Control de clases de movimiento continuo
             if (node.moveClassLeft) {
                 spriteLeft.classList.add(node.moveClassLeft);
+                // Nueva lógica: Controla la velocidad de la animación CSS desde el nodo
+                if (node.moveDuration) {
+                    spriteLeft.style.animationDuration = node.moveDuration;
+                } else {
+                    spriteLeft.style.animationDuration = ""; // Restaura la velocidad por defecto
+                }
+            } else {
+                spriteLeft.style.animationDuration = ""; // Limpia si no hay movimiento
             }
             // ----------------------------------
             
