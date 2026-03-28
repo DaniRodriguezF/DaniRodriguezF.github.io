@@ -2483,7 +2483,7 @@ let animationInterval, typingTimeout, sfxTimeout, customTimeout, spriteAnimLeftI
                 next: "picnic_mensaje_3"
             },
             picnic_mensaje_3: {
-                text: "* ...pero que cada segundo que logran pasar juntos es un tesoro para él.",
+                text: "* Pero que cada segundo que logran pasar juntos es un tesoro para él.",
                 sprite: "img/characters/toriel/toriel_happy.png",
                 music: "sounds/mus_home2.mp3",
                 voice: "sounds/snd_toriel.wav",
@@ -2610,7 +2610,7 @@ let animationInterval, typingTimeout, sfxTimeout, customTimeout, spriteAnimLeftI
                 next: "picnic_vision_dani"
             },
             picnic_vision_dani: {
-                text: "* Karla... Yo siempre te apoyaré en cada paso. \n* Te mereces toda la felicidad del mundo, te quiero mucho.",
+                text: "* Karla... Te mereces toda la felicidad del mundo.",
                 sprite: "", 
                 music: "sounds/snd_no.wav", 
                 voice: "sounds/snd_no.wav",

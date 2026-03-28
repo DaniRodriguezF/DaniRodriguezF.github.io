@@ -14,7 +14,6 @@ const imagenes = ['img/1titulo.png', 'img/2titulo.png', 'img/3titulo.png'];
         
         let index = 0;
 
-        // --- LÓGICA PANTALLA COMPLETA ---
         fullscreenBtn.addEventListener('click', () => {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch((err) => {
