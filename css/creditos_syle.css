@@ -1,0 +1,83 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    color: white;
+    font-family: 'Press Start 2P', monospace; 
+    overflow: hidden; 
+}
+
+#contenedor-creditos {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+#contenido-animado {
+    position: absolute;
+    top: 0; /* Lógica técnica agregada: Fija el punto de partida arriba */
+    width: 100%; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center; 
+    animation: subirCreditos 35s linear forwards; 
+}
+
+#contenido-animado h2 {
+    margin: 15px 0; 
+    font-size: 24px; 
+}
+
+#contenido-animado p {
+    margin: 10px 0; 
+    font-size: 16px; 
+    max-width: 80%; 
+    line-height: 1.5; /* Lógica técnica: un poco de interlineado para que los párrafos largos se lean mejor */
+}
+
+#contenedor-final {
+    margin-top: 70vh; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 15vh; /* Ajustado para centrar verticalmente el bloque de texto completo */
+}
+
+/* Lógica matemática corregida para bloques de texto muy grandes */
+@keyframes subirCreditos {
+    0% {
+        transform: translateY(100vh); /* Empieza empujado una pantalla entera hacia abajo */
+    }
+    100% {
+        /* Sube hasta que el fondo del contenedor encaje con el fondo de la pantalla */
+        transform: translateY(calc(-100% + 100vh)); 
+    }
+}
+
+#boton-volver {
+    opacity: 0; 
+    pointer-events: none; 
+    transition: opacity 2s ease; 
+    margin-top: 40px; 
+    cursor: pointer;
+    
+    background-color: black;
+    color: white;
+    border: 3px solid white; 
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    padding: 15px 20px;
+}
+
+#boton-volver:hover {
+    color: yellow; 
+    border-color: yellow;
+}
+
+.mostrar-boton {
+    opacity: 1 !important;
+    pointer-events: auto !important; 
+}

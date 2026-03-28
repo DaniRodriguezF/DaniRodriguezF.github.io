@@ -1,0 +1,141 @@
+body, html {
+            background-color: black;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+            color: white;
+        }
+
+        body.main-menu-visible {
+            background-image: url('../img/background.png');
+            background-size: contain; 
+            background-position: center;
+            background-repeat: no-repeat;
+            image-rendering: pixelated; 
+            transition: background-image 0.8s steps(4);
+        }
+
+        #start-screen {
+            text-align: center;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .start-option {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #start-screen p {
+            font-size: 18px;
+            margin: 0;
+            letter-spacing: 2px;
+            animation: blink 1.2s steps(2, start) infinite; 
+        }
+
+        #intro-container {
+            display: none;
+            width: 90%;
+            max-width: 900px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #intro-image {
+            max-width: 100%;
+            height: auto;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+            image-rendering: pixelated; 
+        }
+
+        #main-menu-container {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .menu-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 60px; 
+            margin-top: -60px;
+        }
+
+        .options-list {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 35px;
+            padding-bottom: 60px;
+            padding-left: 50px;
+        }
+
+        .menu-option {
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding-right: 45px;
+            position: relative;
+            transition: color 0.2s ease;
+            letter-spacing: 2px;
+        }
+
+        .menu-option .heart {
+            visibility: hidden; 
+            position: absolute;
+            left: -45px;
+            width: 24px;
+            height: 24px;
+            background-color: #ff0000;
+            clip-path: polygon(0% 20%, 20% 0%, 40% 0%, 50% 20%, 60% 0%, 80% 0%, 100% 20%, 100% 50%, 50% 100%, 0% 50%);
+            animation: pulse 0.6s infinite alternate;
+        }
+
+        .menu-option:hover { color: #ffff00; }
+        .menu-option:hover .heart { visibility: visible; }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
+
+        @keyframes blink { to { visibility: hidden; } }
+
+        .visible { opacity: 1 !important; }
+
+        #fullscreen-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1000;
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 24px;
+            opacity: 0.2;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            font-family: Arial, sans-serif;
+        }
+
+        #fullscreen-btn:hover { opacity: 0.8; }
