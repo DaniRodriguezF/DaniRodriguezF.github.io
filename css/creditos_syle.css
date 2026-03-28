@@ -99,3 +99,35 @@ body {
         }
 
         #fullscreen-btn:hover { opacity: 0.8; }
+
+
+/* =========================================
+   LÓGICA TÉCNICA RESPONSIVE (PANTALLAS MÓVILES)
+   ========================================= */
+@media (max-width: 768px) {
+    
+    /* Reduce el tamaño de los títulos para que no rompan el ancho */
+    #contenido-animado h2 {
+        font-size: 16px; 
+        margin: 10px 0;
+    }
+
+    /* Reduce el tamaño de los párrafos y les da más espacio horizontal */
+    #contenido-animado p {
+        font-size: 10px; 
+        max-width: 90%; /* Aprovecha el 90% del ancho del celular */
+        line-height: 1.8; /* Aumenta un poco el interlineado para mejor lectura en pantallas pequeñas */
+    }
+
+    /* Ajusta el espaciado del "hueco" técnico para pantallas verticales */
+    #contenedor-final {
+        padding-bottom: 25vh; 
+    }
+
+    /* Hace el botón más compacto para que encaje bien */
+    #boton-volver {
+        font-size: 12px;
+        padding: 10px 15px;
+        margin-top: 30px;
+    }
+}
