@@ -404,60 +404,63 @@ body, html {
    ============================================================== */
 @media (max-width: 950px) and (orientation: landscape) {
     
-    /* 1. Achicamos los sprites para que no choquen con el texto arriba */
+    /* 1. Sprites más grandes, manteniendo el centrado técnico */
     #sprites-container {
         gap: 20px;
         align-items: center;
+        margin-bottom: 10px; /* Separación extra técnica del cuadro de texto */
     }
     
     .sprite-img { 
-        width: 90px; 
+        width: 140px; /* Aumentado de 90px a 140px */
     }
 
     .asgore-scale {
-        width: 140px !important; 
+        width: 190px !important; /* Escalado proporcional para Asgore */
     }
 
     .napsta-scale {
-        width: 70px !important; 
+        width: 100px !important; /* Escalado proporcional para Napstablook */
     }
 
-    /* 2. Comprimimos la caja de texto para que no ocupe toda la altura */
+    /* 2. Caja de texto más amplia y con fuente más legible */
     #dialogue-container {
-        width: 90%;
-        min-height: 100px; /* Mucho más bajito */
-        padding: 10px;
-        margin-bottom: 5px; /* Pegado al fondo */
+        width: 92%;
+        min-height: 120px; /* Un poco más de espacio para la nueva fuente */
+        padding: 15px;
+        margin-bottom: 5px; 
     }
 
     #text-box { 
-        font-size: 12px; 
+        font-size: 16px; /* Aumentado a un tamaño estándar muy cómodo de leer */
+        line-height: 1.4;
     }
 
     #options-container {
-        gap: 10px;
-        margin-top: 2px;
+        gap: 15px;
+        margin-top: 8px;
     }
 
     .option-btn {
-        font-size: 10px;
-        padding: 5px 10px;
+        font-size: 14px; /* Botones más grandes y fáciles de tocar */
+        padding: 8px 12px;
     }
 
-    /* 3. Ajuste de las pantallas gigantes para que quepan a lo alto */
+    /* 3. Pantallas gigantes ajustadas para mayor impacto visual */
     #game-over-heart {
-        width: 25px; height: 25px;
+        width: 35px; height: 35px; /* Corazón más visible */
         margin-bottom: 15px;
     }
 
     #game-over-text, #birthday-text { 
-        font-size: 28px; 
-        margin-bottom: 15px;
+        font-size: 40px; /* Aumentado considerablemente para que llene más la pantalla */
+        margin-bottom: 20px;
     }
 
     #game-over-options .option-btn,
     #birthday-options .option-btn {
-        font-size: 12px;
-        min-width: 150px;
+        font-size: 16px;
+        min-width: 180px;
+        padding: 12px;
     }
 }
