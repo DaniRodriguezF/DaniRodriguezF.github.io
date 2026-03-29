@@ -2331,7 +2331,7 @@ let animationInterval, typingTimeout, sfxTimeout, customTimeout, spriteAnimLeftI
                 next: "picnic_tarta"
             },
             picnic_tarta: {
-                text: "* * Corté el pedazo más grande especialmente para ti.",
+                text: "* Corté el pedazo más grande especialmente para ti.",
                 sprite: "img/characters/toriel/toriel_smile.png",
                 music: "sounds/mus_home.mp3",
                 voice: "sounds/snd_toriel.wav",
