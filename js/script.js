@@ -879,7 +879,7 @@ let animationInterval, typingTimeout, sfxTimeout, customTimeout, spriteAnimLeftI
                 music: "sounds/mus_papyrus.mp3",
                 voice: "sounds/snd_txt.wav",
                 onEnter: () => { document.getElementById('sprite-left').classList.add('sans-shift'); },
-                soundEffect: "sounds/snd_computer.ogg",
+                soundEffect: "sounds/snd_computer.mp3",
                 soundDelay: 100,
                 options: [ { label: "Caminar por lo rosa", next: "puzzle_colores_6" } ]
             },

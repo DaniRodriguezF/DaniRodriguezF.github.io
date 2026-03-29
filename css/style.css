@@ -338,3 +338,63 @@ body, html {
     width: 130px !important;
     margin-bottom: 20px !important; 
 }
+
+
+/* =========================================
+   LÓGICA TÉCNICA RESPONSIVE (PANTALLAS MÓVILES)
+   ========================================= */
+@media (max-width: 768px) {
+    
+    /* 1. Ajuste de los personajes para que quepan juntos sin desbordar */
+    #sprites-container {
+        gap: 15px; /* Menos separación entre personajes */
+        width: 95%;
+    }
+    
+    .sprite-img { 
+        width: 120px; /* Reducimos el tamaño estándar */
+    }
+
+    .asgore-scale {
+        width: 220px !important; /* Asgore es masivo, requiere un ajuste técnico específico */
+    }
+
+    .napsta-scale {
+        width: 90px !important; 
+    }
+
+    /* 2. Ajuste de la caja de diálogo para aprovechar la pantalla vertical */
+    #dialogue-container {
+        width: 95%;
+        padding: 12px;
+        min-height: 150px;
+        margin-bottom: 20px;
+    }
+
+    #text-box { 
+        font-size: 12px; 
+    }
+
+    /* 3. Ajuste de los botones de interacción (opciones del jugador) */
+    #options-container {
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .option-btn {
+        font-size: 10px;
+        padding: 8px 10px;
+    }
+
+    /* 4. Ajuste de las pantallas finales gigantes */
+    #game-over-text, #birthday-text { 
+        font-size: 30px; /* Reducido a la mitad para evitar scroll horizontal */
+        margin-bottom: 30px;
+    }
+
+    #game-over-options .option-btn,
+    #birthday-options .option-btn {
+        font-size: 14px;
+        min-width: 200px;
+    }
+}
