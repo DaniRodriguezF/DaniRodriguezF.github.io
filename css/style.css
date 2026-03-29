@@ -398,3 +398,66 @@ body, html {
         min-width: 200px;
     }
 }
+
+/* ==============================================================
+   LÓGICA TÉCNICA RESPONSIVE (TELÉFONOS EN MODO HORIZONTAL / LANDSCAPE)
+   ============================================================== */
+@media (max-width: 950px) and (orientation: landscape) {
+    
+    /* 1. Achicamos los sprites para que no choquen con el texto arriba */
+    #sprites-container {
+        gap: 20px;
+        align-items: center;
+    }
+    
+    .sprite-img { 
+        width: 90px; 
+    }
+
+    .asgore-scale {
+        width: 140px !important; 
+    }
+
+    .napsta-scale {
+        width: 70px !important; 
+    }
+
+    /* 2. Comprimimos la caja de texto para que no ocupe toda la altura */
+    #dialogue-container {
+        width: 90%;
+        min-height: 100px; /* Mucho más bajito */
+        padding: 10px;
+        margin-bottom: 5px; /* Pegado al fondo */
+    }
+
+    #text-box { 
+        font-size: 12px; 
+    }
+
+    #options-container {
+        gap: 10px;
+        margin-top: 2px;
+    }
+
+    .option-btn {
+        font-size: 10px;
+        padding: 5px 10px;
+    }
+
+    /* 3. Ajuste de las pantallas gigantes para que quepan a lo alto */
+    #game-over-heart {
+        width: 25px; height: 25px;
+        margin-bottom: 15px;
+    }
+
+    #game-over-text, #birthday-text { 
+        font-size: 28px; 
+        margin-bottom: 15px;
+    }
+
+    #game-over-options .option-btn,
+    #birthday-options .option-btn {
+        font-size: 12px;
+        min-width: 150px;
+    }
+}
